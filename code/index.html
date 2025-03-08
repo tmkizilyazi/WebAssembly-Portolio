@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portföy Yönetim Sistemi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <div class="logo">
+                    <h1>PortföyPro</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#dashboard" class="active">Gösterge Paneli</a></li>
+                    <li><a href="#portfolio">Portföy</a></li>
+                    <li><a href="#transactions">İşlemler</a></li>
+                    <li><a href="#analytics">Analitik</a></li>
+                    <li><a href="#settings">Ayarlar</a></li>
+                </ul>
+                <div class="user-profile">
+                    <span>Hoş geldiniz</span>
+                    <img src="img/avatar.png" alt="Kullanıcı Profili">
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section id="dashboard" class="active-section">
+                <h2>Gösterge Paneli</h2>
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Toplam Varlık</h3>
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2 id="total-assets">₺0</h2>
+                            <p><span id="total-change" class="positive">+0%</span> bu hafta</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Hisse Senetleri</h3>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2 id="stocks-value">₺0</h2>
+                            <p><span id="stocks-change" class="positive">+0%</span> bu hafta</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Kripto Varlıklar</h3>
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2 id="crypto-value">₺0</h2>
+                            <p><span id="crypto-change" class="negative">-0%</span> bu hafta</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Nakit</h3>
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2 id="cash-value">₺0</h2>
+                            <p>Kullanılabilir bakiye</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Portföy Performansı</h3>
+                        <div class="chart-filters">
+                            <button class="active" data-period="1w">1H</button>
+                            <button data-period="1m">1A</button>
+                            <button data-period="3m">3A</button>
+                            <button data-period="1y">1Y</button>
+                            <button data-period="all">Tümü</button>
+                        </div>
+                    </div>
+                    <div id="portfolio-chart"></div>
+                </div>
+
+                <div class="asset-distribution">
+                    <h3>Varlık Dağılımı</h3>
+                    <div class="distribution-container">
+                        <div id="distribution-chart"></div>
+                        <div class="distribution-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #4361ee;"></span>
+                                <span class="legend-label">Hisse Senetleri</span>
+                                <span class="legend-value" id="stocks-percentage">0%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #3a0ca3;"></span>
+                                <span class="legend-label">Kripto</span>
+                                <span class="legend-value" id="crypto-percentage">0%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #7209b7;"></span>
+                                <span class="legend-label">Tahvil</span>
+                                <span class="legend-value" id="bonds-percentage">0%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #f72585;"></span>
+                                <span class="legend-label">Nakit</span>
+                                <span class="legend-value" id="cash-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="portfolio">
+                <h2>Portföy</h2>
+                <div class="action-bar">
+                    <div class="search-container">
+                        <input type="text" id="asset-search" placeholder="Varlık ara...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="filter-container">
+                        <select id="asset-filter">
+                            <option value="all">Tüm Varlıklar</option>
+                            <option value="stocks">Hisse Senetleri</option>
+                            <option value="crypto">Kripto</option>
+                            <option value="bonds">Tahvil</option>
+                        </select>
+                    </div>
+                    <button class="add-asset-btn">
+                        <i class="fas fa-plus"></i> Varlık Ekle
+                    </button>
+                </div>
+
+                <div class="portfolio-table">
+                    <table id="assets-table">
+                        <thead>
+                            <tr>
+                                <th>Varlık</th>
+                                <th>Tür</th>
+                                <th>Miktar</th>
+                                <th>Ortalama Alış</th>
+                                <th>Mevcut Fiyat</th>
+                                <th>Değer</th>
+                                <th>24s Değişim</th>
+                                <th>Toplam Kar/Zarar</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assets-body">
+                            <!-- Veriler JavaScript ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="transactions">
+                <h2>İşlemler</h2>
+                <div class="action-bar">
+                    <div class="search-container">
+                        <input type="text" id="transaction-search" placeholder="İşlem ara...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="date-filter">
+                        <label for="date-from">Başlangıç:</label>
+                        <input type="date" id="date-from">
+                        <label for="date-to">Bitiş:</label>
+                        <input type="date" id="date-to">
+                    </div>
+                    <button class="add-transaction-btn">
+                        <i class="fas fa-plus"></i> İşlem Ekle
+                    </button>
+                </div>
+
+                <div class="transactions-table">
+                    <table id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Tür</th>
+                                <th>Varlık</th>
+                                <th>Miktar</th>
+                                <th>Fiyat</th>
+                                <th>Toplam</th>
+                                <th>Durum</th>
+                                <th>Not</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Veriler JavaScript ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="analytics">
+                <h2>Analitik</h2>
+                <div class="analytics-cards">
+                    <div class="analytics-card">
+                        <h3>Performans Analizi</h3>
+                        <div id="performance-chart"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Sektörel Dağılım</h3>
+                        <div id="sector-chart"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Risk Analizi</h3>
+                        <div id="risk-chart"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Yıllık Getiri</h3>
+                        <div id="annual-return-chart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings">
+                <h2>Ayarlar</h2>
+                <div class="settings-container">
+                    <div class="settings-card">
+                        <h3>Profil Ayarları</h3>
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="username">Kullanıcı Adı</label>
+                                <input type="text" id="username" placeholder="Kullanıcı adınız">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-posta</label>
+                                <input type="email" id="email" placeholder="E-posta adresiniz">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Şifre</label>
+                                <input type="password" id="password" placeholder="••••••••">
+                            </div>
+                            <button type="submit" class="save-btn">Kaydet</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Bildirim Ayarları</h3>
+                        <div class="notification-settings">
+                            <div class="notification-item">
+                                <span>Fiyat Uyarıları</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <span>İşlem Onayları</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <span>Piyasa Haberleri</span>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <span>E-posta Bildirimleri</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Görünüm Ayarları</h3>
+                        <div class="theme-settings">
+                            <div class="theme-option">
+                                <span>Tema</span>
+                                <select id="theme-selector">
+                                    <option value="light">Açık</option>
+                                    <option value="dark">Koyu</option>
+                                    <option value="system">Sistem</option>
+                                </select>
+                            </div>
+                            <div class="currency-option">
+                                <span>Para Birimi</span>
+                                <select id="currency-selector">
+                                    <option value="TRY">TRY (₺)</option>
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="add-asset-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yeni Varlık Ekle</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="add-asset-form">
+                    <div class="form-group">
+                        <label for="asset-type">Varlık Türü</label>
+                        <select id="asset-type" required>
+                            <option value="" disabled selected>Varlık türü seçin</option>
+                            <option value="stock">Hisse Senedi</option>
+                            <option value="crypto">Kripto Para</option>
+                            <option value="bond">Tahvil</option>
+                            <option value="cash">Nakit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-name">Varlık Adı/Sembolü</label>
+                        <input type="text" id="asset-name" placeholder="Örn: THYAO, BTC" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-amount">Miktar</label>
+                        <input type="number" id="asset-amount" step="0.0000001" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-price">Birim Fiyat</label>
+                        <input type="number" id="asset-price" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purchase-date">Alım Tarihi</label>
+                        <input type="date" id="purchase-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-notes">Notlar</label>
+                        <textarea id="asset-notes" rows="3"></textarea>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-btn">İptal</button>
+                        <button type="submit" class="save-btn">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-transaction-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yeni İşlem Ekle</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="add-transaction-form">
+                    <div class="form-group">
+                        <label for="transaction-type">İşlem Türü</label>
+                        <select id="transaction-type" required>
+                            <option value="" disabled selected>İşlem türü seçin</option>
+                            <option value="buy">Alım</option>
+                            <option value="sell">Satım</option>
+                            <option value="deposit">Para Yatırma</option>
+                            <option value="withdraw">Para Çekme</option>
+                            <option value="dividend">Temettü</option>
+                        </select>
+                    </div>
+                    <div class="form-group asset-select-group">
+                        <label for="transaction-asset">Varlık</label>
+                        <select id="transaction-asset" required>
+                            <option value="" disabled selected>Varlık seçin</option>
+                            <!-- Varlıklar JavaScript ile doldurulacak -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-amount">Miktar</label>
+                        <input type="number" id="transaction-amount" step="0.0000001" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-price">Birim Fiyat</label>
+                        <input type="number" id="transaction-price" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-date">İşlem Tarihi</label>
+                        <input type="datetime-local" id="transaction-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-fee">Komisyon/Ücret</label>
+                        <input type="number" id="transaction-fee" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction-notes">Notlar</label>
+                        <textarea id="transaction-notes" rows="2"></textarea>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="cancel-btn">İptal</button>
+                        <button type="submit" class="save-btn">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- WebAssembly için -->
+    <script src="js/wasm_loader.js"></script>
+    <!-- Chart.js grafik kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Ana JavaScript dosyası -->
+    <script src="js/app.js"></script>
+</body>
+
+</html>
